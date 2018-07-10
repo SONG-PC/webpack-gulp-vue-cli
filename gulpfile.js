@@ -1,4 +1,4 @@
-var gulp = require('gulp')//gulp主组件
+var gulp = require('gulp')//gulp主组件单位党委的
 var htmlmin = require('gulp-htmlmin')//html压缩组件
 var gulpRemoveHtml = require('gulp-remove-html')//标签移除
 var gulpCleanCss = require('gulp-clean-css')//压缩css为一行
@@ -12,9 +12,17 @@ var gulpSequence = require('gulp-sequence')//同步执行
 var gulpLess = require('gulp-less')
 var clean = require('gulp-clean')//清除文件插件
 var imagemin = require('gulp-imagemin')//压缩图片
- 
+var jshint = require('gulp-jshint');
 var buildBasePath = 'dist/' //构建输出目录
- 
+var babel = require("gulp-babel");    // 用于ES6转化ES5
+
+//代码检测 
+gulp.task('lint', function() {
+  return gulp.src('app/*.js')
+    .pipe(jshint())
+    .pipe(jshint.reporter('default'));
+});
+
 //删除dist文件
 gulp.task('clean', function () {
     return gulp.src(buildBasePath, { read: false })
@@ -101,14 +109,7 @@ gulp.task('minifycssmd5', function () {
         .pipe(gulp.dest('rev'))//将rev-manifest.json保存到rev目录内
 })
  
-//imgmd5,压缩后并用md5进行命名，下面使用revCollector进行路径替换
-gulp.task('minifyimgmd5', function () {
-    return gulp.src(['app/*.jpg', 'app/*.png', 'app/*.gif'])
-        .pipe(rev())//文件名后面加md5后缀
-        .pipe(gulp.dest(buildBasePath + 'img'))
-        .pipe(rev.manifest('rev-img-manifest.json'))
-        .pipe(gulp.dest('rev'))
-})
+
  
 //生产使用，替换文件名，common.js替换为build.min.js
 gulp.task('replacejs', function () {
@@ -138,14 +139,17 @@ gulp.task('replacecssDev', function () {
         .pipe(gulp.dest(buildBasePath))
 })
  
-
+// ES6转化为ES5
+// 在命令行使用 gulp toes5 启动此任务
+gulp.task("toes5", function () {
+  return gulp.src("app/*.js")// ES6 源码存放的路径
+    .pipe(babel({
+            presets: ['es2015']
+        })) 
+    .pipe(gulp.dest(buildBasePath)); //转换成 ES5 存放的路径
+});
  
-gulp.task('revimg', function () {
-    //css，主要针对img替换
-    return gulp.src(['rev/**/rev-img-manifest.json', buildBasePath + 'css/*.css'])
-        .pipe(revCollector({ replaceReved: true }))
-        .pipe(gulp.dest(buildBasePath + 'css'))
-})
+
  
 //监视文件的变化，有修改时，自动调用defautdev缺省默认任务
 gulp.task('watch', function () {
@@ -160,7 +164,7 @@ gulp.task('watchdev', function () {
     gulp.watch('**/*.html', ['defaultdev']);
 });
  
-gulp.task('default', function (cb) { gulpSequence('clean', 'copy', 'minifyjsmd5', 'minifycssmd5', 'minifyimgmd5', 'htmlmin', 'replacejs', 'replacecss', 'rev', 'revimg')(cb); });
+gulp.task('default', function (cb) { gulpSequence('clean', 'copy', 'minifyjsmd5', 'minifycssmd5', 'minifyimgmd5', 'htmlmin', 'replacejs', 'replacecss')(cb); });
  
 gulp.task('default2', function (cb) { gulpSequence('clean', 'copy', 'copyimg', 'uglify', 'minifycss', 'htmlmin', 'replacejs', 'replacecss')(cb); });
  

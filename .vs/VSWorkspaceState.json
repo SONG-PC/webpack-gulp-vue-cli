@@ -2,9 +2,8 @@
   "ExpandedNodes": [
     "",
     "\\app",
-    "\\public",
-    "\\vuetest\\build"
+    "\\public"
   ],
-  "SelectedNode": "\\webpack.config.js",
+  "SelectedNode": "\\gulpfile.js",
   "PreviewInSolutionExplorer": false
 }

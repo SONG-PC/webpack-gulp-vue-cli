@@ -1,0 +1,9 @@
+{
+  "jshintConfig":{
+    "undef": true,
+    "unused": true,
+    "predef": [ "MY_GLOBAL", "ads" ] // 声明几个全局变量
+  },
+  "author": "wenzi",
+  "license": "ISC"
+}
