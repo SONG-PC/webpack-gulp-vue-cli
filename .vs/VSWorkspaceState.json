@@ -1,9 +1,8 @@
 {
   "ExpandedNodes": [
     "",
-    "\\app",
-    "\\public"
+    "\\vuetest\\src",
+    "\\vuetest\\static"
   ],
-  "SelectedNode": "\\gulpfile.js",
   "PreviewInSolutionExplorer": false
 }
